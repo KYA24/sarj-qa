@@ -2,6 +2,15 @@
 
 A runnable QA workspace: **expectations → checks → evidence**. Arabic/English, React + TypeScript, ASP.NET Core, SQLite, and real C# / Dart HTTP runners. AI drafts are reviewed by the tester; deterministic rules decide automated outcomes.
 
+## Review links
+
+- **Public source:** https://github.com/KYA24/sarj-qa
+- **Presentation:** https://sarj-qa-presentation.pages.dev/ — product walkthrough, scope, approach and limitations; no sign-in required.
+
+## Why this tool and scope
+
+I built this tool to turn a one-off finding like NZL-217 into a repeatable, evidence-backed regression check. I chose API-level booking validation because rules such as checkout-after-check-in can be tested deterministically, with saved requests and responses. The scope prioritizes reproducible checks and clear verdicts over browser automation or broad coverage: the included local fixture deliberately accepts reversed dates, so a correct negative test reports a failure.
+
 ## Try locally — no account or sign-in
 
 Requirements: Node.js 22+, .NET 10 and Dart. The setup script can install missing SDKs privately on Linux/macOS. First-time SDK download can be large; no paid API is required.
@@ -20,7 +29,7 @@ Open **http://127.0.0.1:5288** and choose **ابدأ تجربة النظام**. 
 - The local booking fixture intentionally accepts reversed dates. A negative test should fail; this is a demonstration, not the unavailable real staff console.
 - Approve a test and explicitly allow writes before executing mutations. C# and Dart share structured definitions and evidence records.
 - Optional Cloudflare AI has a shared daily demo allowance; click explicitly to send sources for draft analysis. No secret key is shipped and no paid fallback is used. Deterministic features work when AI is unavailable.
-- The **دليل الاستخدام** button opens the illustrated guide, using existing interface images only. **عرض المشروع** opens a 10-slide interactive presentation; **Space** reveals elements and advances slides.
+- The **دليل الاستخدام** button opens the illustrated usage guide. **عرض المشروع** opens an 11-slide interactive presentation; **Space** reveals elements and advances slides.
 
 ## Local versus private published workspace
 
