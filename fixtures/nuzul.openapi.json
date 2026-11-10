@@ -1,0 +1,332 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Nuzul Booking — Local QA Demonstration Fixture",
+    "version": "1.0.0",
+    "description": "AUTHORITATIVE LOCAL FIXTURE CONTRACT ONLY. Not an actual Nuzul service or Staff Console. The deliberate defect accepts checkout before check-in. Requirements: checkout must be later than check-in (400 otherwise); guestName, checkIn, checkOut are mandatory; valid creation returns 201; nights equals checkout minus checkin; changes persist for this fixture process lifetime."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5190",
+      "description": "Loopback demonstration only"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "Fixture health",
+        "responses": {
+          "200": {
+            "description": "Ready"
+          }
+        }
+      }
+    },
+    "/bookings": {
+      "get": {
+        "operationId": "listBookings",
+        "summary": "List persisted bookings",
+        "responses": {
+          "200": {
+            "description": "Bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBooking",
+        "summary": "Create booking",
+        "description": "Checkout MUST be strictly later than checkIn. Return HTTP 400 for invalid date ordering. Required booking fields: guestName, checkIn, checkOut. A valid request returns 201 and calculated nights.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "guestName": "Demo Guest",
+                    "checkIn": "2030-01-10",
+                    "checkOut": "2030-01-13"
+                  }
+                },
+                "invalidDate": {
+                  "value": {
+                    "guestName": "Demo Guest",
+                    "checkIn": "2030-01-10",
+                    "checkOut": "2030-01-09"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing booking fields; checkout not after check-in"
+          }
+        },
+        "x-test-cases": [
+          {
+            "id": "fixture-valid-booking",
+            "title": "Valid booking creation",
+            "method": "POST",
+            "path": "/bookings",
+            "body": {
+              "guestName": "Demo Guest",
+              "checkIn": "2030-01-10",
+              "checkOut": "2030-01-13"
+            },
+            "expectedStatus": 201,
+            "expectedResult": "HTTP 201 with nights equal to 3",
+            "assertions": [
+              {
+                "kind": "jsonEquals",
+                "path": "nights",
+                "expected": "3"
+              }
+            ]
+          },
+          {
+            "id": "fixture-invalid-checkout",
+            "title": "Reject checkout preceding check-in",
+            "method": "POST",
+            "path": "/bookings",
+            "body": {
+              "guestName": "Demo Guest",
+              "checkIn": "2030-01-10",
+              "checkOut": "2030-01-09"
+            },
+            "expectedStatus": 400,
+            "expectedResult": "HTTP 400: checkout must be later than check-in",
+            "assertions": [
+              {
+                "kind": "status",
+                "path": "",
+                "expected": "400"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/bookings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "1"
+        }
+      ],
+      "get": {
+        "operationId": "getBooking",
+        "summary": "Retrieve booking",
+        "responses": {
+          "200": {
+            "description": "Persisted booking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateBooking",
+        "summary": "Update and persist booking",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              },
+              "example": {
+                "guestName": "Demo Guest",
+                "checkIn": "2030-01-10",
+                "checkOut": "2030-01-13"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid booking"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchBooking",
+        "summary": "Partially update booking",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              },
+              "example": {
+                "guestName": "Demo Guest",
+                "checkIn": "2030-01-10",
+                "checkOut": "2030-01-13"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated"
+          },
+          "400": {
+            "description": "Invalid booking"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/protected": {
+      "get": {
+        "operationId": "authenticationCheck",
+        "summary": "Requires documented Bearer credential",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized"
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Booking": {
+        "type": "object",
+        "required": [
+          "guestName",
+          "checkIn",
+          "checkOut"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "guestName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "checkIn": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 check-in calendar date."
+          },
+          "checkOut": {
+            "type": "string",
+            "format": "date",
+            "description": "Checkout MUST be strictly later than checkIn; otherwise return HTTP 400."
+          },
+          "nights": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Number of calendar nights: checkOut minus checkIn."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "LOCAL FIXTURE ONLY token: fixture-token"
+      }
+    }
+  },
+  "x-test-cases": [
+    {
+      "id": "fixture-valid-booking",
+      "title": "Valid booking creation",
+      "method": "POST",
+      "path": "/bookings",
+      "body": "{\"guestName\":\"Demo Guest\",\"checkIn\":\"2030-01-10\",\"checkOut\":\"2030-01-13\"}",
+      "expectedStatus": 201,
+      "expectedResult": "HTTP 201 with nights equal to 3",
+      "assertions": [
+        {
+          "kind": "jsonEquals",
+          "path": "nights",
+          "expected": "3"
+        }
+      ]
+    },
+    {
+      "id": "fixture-invalid-checkout",
+      "title": "Reject checkout preceding check-in",
+      "method": "POST",
+      "path": "/bookings",
+      "body": "{\"guestName\":\"Demo Guest\",\"checkIn\":\"2030-01-10\",\"checkOut\":\"2030-01-09\"}",
+      "expectedStatus": 400,
+      "expectedResult": "HTTP 400: checkout must be later than check-in",
+      "assertions": [
+        {
+          "kind": "status",
+          "path": "",
+          "expected": "400"
+        }
+      ]
+    }
+  ]
+}

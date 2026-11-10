@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "product": "Sarj QA Studio",
+  "audience": "Arabic system tester; optional specialist automation",
+  "userScope": "Reuse existing images only; no new screenshot capture",
+  "annotationFormat": "SVG numbered circle and arrow over unchanged full-native PNG",
+  "steps": [
+    {
+      "id": "choose-mode",
+      "section": "ابدأ",
+      "title": "اختر مساحة العمل المناسبة",
+      "instructions": [
+        "النسخة المحلية: تبدأ التجربة دون حساب Google، وفي مساحة منفصلة عن بيانات صاحب النسخة المنشورة.",
+        "النسخة المنشورة: استخدم تسجيل الدخول بحساب Google المسموح له. الرابط وحده لا يتيح بيانات المالك.",
+        "ابدأ بمثال التدريب المرفق، أو أنشئ مشروعًا مستقلًا لتختبر نظامك."
+      ],
+      "image": null,
+      "annotations": [],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "شرح نصي لخيار التشغيل الجديد؛ الصور التالية من رحلة اختبار محفوظة سابقًا، وليست تصويرًا لشاشة اختيار الوضع."
+    },
+    {
+      "id": "new-project",
+      "section": "ابدأ",
+      "title": "سمّ النظام الذي تريد اختباره",
+      "instructions": [
+        "في «اسم المشروع الجديد»، اكتب اسم النظام أو الميزة؛ مثل: نظام الحجوزات.",
+        "اضغط «ابدأ مشروعًا».",
+        "للعودة إلى مشروع محفوظ اختره من قائمة «المشروع الحالي»."
+      ],
+      "image": "tester-empty-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1120,
+          "y": 260,
+          "tx": 1300,
+          "ty": 343,
+          "label": "اسم المشروع الجديد"
+        },
+        {
+          "number": 2,
+          "x": 1100,
+          "y": 450,
+          "tx": 1300,
+          "ty": 407,
+          "label": "ابدأ مشروعًا"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "Existing screenshot shows the indicated control; no new state capture.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1000
+    },
+    {
+      "id": "expectations",
+      "section": "ابدأ",
+      "title": "اكتب المطلوب قبل الحكم على النتيجة",
+      "instructions": [
+        "افتح تبويب «المطلوب».",
+        "اكتب «عنوان المطلوب» ثم وصفًا واحدًا في «وش المفروض يصير؟»، أو اختر «أرفق ملفًا / صورة».",
+        "اضغط «احفظ المطلوب» ثم راجع «المطلوب المحفوظ». الملف أو الصورة مرجع للمراجعة، وليس دليلًا على سلوك حي."
+      ],
+      "image": "tester-checks-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 955,
+          "y": 268,
+          "tx": 955,
+          "ty": 372,
+          "label": "المطلوب"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "الصورة توضح موضع التبويب فقط. حقول المطلوب موثقة من مصدر الواجهة الحالي، ولا تتوفر لها لقطة محفوظة كاملة.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1000
+    },
+    {
+      "id": "new-check",
+      "section": "اختبر",
+      "title": "حوّل المطلوب إلى اختبار واضح",
+      "instructions": [
+        "افتح «اختباراتي» ثم اضغط «أضف اختبارًا».",
+        "اكتب «وش بتختبر؟» و«وش النتيجة المتوقعة؟». مثال: منع مغادرة تسبق الوصول.",
+        "ضع كل خطوة في حقل مستقل. استخدم «إضافة خطوة» (+) للإضافة، و(×) لحذف خطوة.",
+        "اضغط «احفظ الاختبار»."
+      ],
+      "image": "tester-checks-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 650,
+          "y": 278,
+          "tx": 610,
+          "ty": 372,
+          "label": "اختباراتي"
+        },
+        {
+          "number": 2,
+          "x": 900,
+          "y": 470,
+          "tx": 1075,
+          "ty": 441,
+          "label": "أضف اختبارًا"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "الصورة تثبت موضع الدخول والبطاقة المحفوظة؛ نموذج تحرير الاختبار موثق نصيًا من الكود الحالي.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1000
+    },
+    {
+      "id": "edit-check",
+      "section": "اختبر",
+      "title": "صحّح نفس الاختبار بدل تكراره",
+      "instructions": [
+        "في بطاقة الاختبار اليدوي اضغط «تعديل».",
+        "عدّل العنوان أو المتوقع أو الخطوات، ثم اضغط «احفظ الاختبار».",
+        "بدّل إلى تبويب آخر وعد إلى «اختباراتي» للتأكد من بقاء التعديل."
+      ],
+      "image": "tester-checks-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 765,
+          "y": 820,
+          "tx": 925,
+          "ty": 734,
+          "label": "تعديل"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "Existing screenshot shows the indicated control; no new state capture.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1000
+    },
+    {
+      "id": "try-system",
+      "section": "اختبر",
+      "title": "جرّب النظام ثم سجّل مشاهدتك",
+      "instructions": [
+        "نفّذ الخطوات بنفسك في النظام الذي تختبره.",
+        "عد إلى بطاقة الاختبار واضغط «سجّل تجربتك».",
+        "إذا كان المتاح صورة أو نص مكالمة فقط، اكتب أنك راجعت دليلًا ثابتًا؛ لا تصف حفظًا حيًا لم تنفذه."
+      ],
+      "image": "tester-checks-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1210,
+          "y": 680,
+          "tx": 1046,
+          "ty": 733,
+          "label": "سجّل تجربتك"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "Existing screenshot shows the indicated control; no new state capture.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1000
+    },
+    {
+      "id": "observation",
+      "section": "اختبر",
+      "title": "اختر النتيجة واكتب الفعلي",
+      "instructions": [
+        "في «نتيجة تجربتك» اختر: سليم، ظهرت مشكلة، تعذّر الاختبار، أو يحتاج تأكد.",
+        "في «وش صار فعلًا؟» اكتب مشاهدتك؛ مثل: ظهرت رسالة نجاح لكن الحجز بقي ظاهرًا.",
+        "أرفق صورة دليل إن توفرت. لا تحتاج لإنتاج صورة جديدة لإكمال التسجيل."
+      ],
+      "image": "tester-first-attempt.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1190,
+          "y": 1030,
+          "tx": 1035,
+          "ty": 1077,
+          "label": "نتيجة تجربتك"
+        },
+        {
+          "number": 2,
+          "x": 200,
+          "y": 1150,
+          "tx": 400,
+          "ty": 1215,
+          "label": "وش صار فعلًا؟"
+        },
+        {
+          "number": 3,
+          "x": 1190,
+          "y": 1340,
+          "tx": 1030,
+          "ty": 1370,
+          "label": "صورة الدليل الاختيارية"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "لقطة محفوظة مبكرة: قد يظهر اختيار الملف اليوم داخل زر الرفع بدل حقل متصفح ظاهر.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1642
+    },
+    {
+      "id": "save-observation",
+      "section": "اختبر",
+      "title": "احفظ بعد مراجعة المطلوب والتجربة",
+      "instructions": [
+        "راجع المطلوب والخطوات والفعلي.",
+        "فعّل «راجعت المطلوب وجربت الخطوات بنفسي» بعد أن ينطبق عليك.",
+        "اضغط «احفظ النتيجة». إذا لم تتمكن من التجربة، اختر «تعذّر الاختبار» ووصف العائق بدقة."
+      ],
+      "image": "tester-first-attempt.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1190,
+          "y": 1440,
+          "tx": 1095,
+          "ty": 1478,
+          "label": "إقرار المراجعة"
+        },
+        {
+          "number": 2,
+          "x": 850,
+          "y": 1588,
+          "tx": 1050,
+          "ty": 1534,
+          "label": "احفظ النتيجة"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "في اللقطة الزر غير مفعّل لأن الإقرار لم يُحدد بعد. لا تمثل هذه الصورة نجاح الحفظ.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1642
+    },
+    {
+      "id": "read-results",
+      "section": "راجع",
+      "title": "اقرأ المتوقع والفعلي معًا",
+      "instructions": [
+        "افتح «النتائج» واقرأ عنوان الاختبار وحالته.",
+        "قارن «المتوقع» بـ«الفعلي»، وانتبه هل السجل «تجربة سجّلها المختبِر» أم «فحص خدمة آلي».",
+        "عند ظهور مشكلة شارك الخطوات مع مسؤول الإصلاح. عند التعذر حل العائق ثم أعد الاختبار."
+      ],
+      "image": "tester-final-results-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 330,
+          "y": 203,
+          "tx": 237,
+          "ty": 302,
+          "label": "النتائج"
+        },
+        {
+          "number": 2,
+          "x": 1190,
+          "y": 780,
+          "tx": 1050,
+          "ty": 803,
+          "label": "المتوقع"
+        },
+        {
+          "number": 3,
+          "x": 580,
+          "y": 875,
+          "tx": 790,
+          "ty": 846,
+          "label": "الفعلي"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "الصور أمثلة تدريبية وليست نتائج مشروعك. راجع الحالات المتعذرة والسجلات الفردية؛ ملخص الإصدار السابق لم يعرض كل الحالات بوضوح.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1043
+    },
+    {
+      "id": "download",
+      "section": "راجع",
+      "title": "نزّل تقريرًا يشرح التجربة",
+      "instructions": [
+        "من «النتائج» اضغط «تنزيل التقرير».",
+        "افتح الملف المحمّل وراجع الاختبارات والمتوقع والفعلي والأدلة.",
+        "شارك النسخة المناسبة فقط؛ لا ترفق بيانات عميل أو معلومات خاصة دون حاجة."
+      ],
+      "image": "tester-final-results-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 170,
+          "y": 640,
+          "tx": 124,
+          "ty": 567,
+          "label": "تنزيل التقرير"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "Existing screenshot shows the indicated control; no new state capture.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1043
+    },
+    {
+      "id": "archive",
+      "section": "راجع",
+      "title": "أرشف مشروعًا واستعده عند الحاجة",
+      "instructions": [
+        "افتح «إدارة مساحة العمل» ثم «أرشفة المشروع الحالي».",
+        "راجع رسالة الأرشفة ثم أكّدها.",
+        "للرجوع: افتح «المشاريع المؤرشفة» ثم «استعادة» بجانب المشروع."
+      ],
+      "image": "tester-final-results-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1190,
+          "y": 860,
+          "tx": 1300,
+          "ty": 937,
+          "label": "إدارة مساحة العمل"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "الصورة توضح مدخل الإدارة فقط؛ لوحة الأرشيف والاستعادة موثقة من مصدر الواجهة الحالي.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1043
+    },
+    {
+      "id": "specialist-entry",
+      "section": "الأتمتة",
+      "title": "استخدم الأتمتة عندما تكون لديك خدمة موثقة",
+      "instructions": [
+        "افتح «إدارة مساحة العمل» ثم «فتح الأدوات المتخصصة».",
+        "ستجد خمس مراحل: فهم المتطلبات، تصميم الاختبارات، تجهيز البيئة، التنفيذ، النتائج والتقارير.",
+        "ارجع إلى «مساحة المختبِر» عند الانتهاء. لا يلزم هذا المسار لتسجيل تجربتك اليدوية."
+      ],
+      "image": "tester-final-results-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 1190,
+          "y": 860,
+          "tx": 1300,
+          "ty": 937,
+          "label": "إدارة مساحة العمل"
+        }
+      ],
+      "sourceBasis": "Current source labels and existing tester screenshot where present",
+      "coverage": "Existing screenshot shows the indicated control; no new state capture.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1043
+    },
+    {
+      "id": "ai-and-sources",
+      "section": "الأتمتة",
+      "title": "حلّل المصدر ثم راجع اقتراحات الذكاء",
+      "instructions": [
+        "في «فهم المتطلبات» أضف ملف المواصفات أو النص أو الصورة.",
+        "المواصفات المنظمة تُحلّل دون الحاجة إلى مزود ذكاء. للتحليل بالمزود المفعّل اختر «تحليل المصادر بالذكاء الاصطناعي».",
+        "راجع المتطلبات المقترحة: مصدر الصورة يتيح مراجعة ثابتة، وليس تشغيل واجهتها تلقائيًا."
+      ],
+      "image": "ui-understand-desktop.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 650,
+          "y": 420,
+          "tx": 500,
+          "ty": 435,
+          "label": "اختيار ملف"
+        },
+        {
+          "number": 2,
+          "x": 670,
+          "y": 820,
+          "tx": 420,
+          "ty": 808,
+          "label": "تحليل بالمزود"
+        }
+      ],
+      "sourceBasis": "Current source labels and historical specialist screenshot",
+      "coverage": "اللقطة الإنجليزية من الأدوات المتخصصة السابقة؛ المقابل العربي الحالي «فهم المتطلبات». عند التحليل تُرسل مصادر المشروع إلى المزود الذي اخترته.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1177
+    },
+    {
+      "id": "approve",
+      "section": "الأتمتة",
+      "title": "راجع الحالة واعتمدها قبل التشغيل",
+      "instructions": [
+        "في «تصميم الاختبارات» راجع العنوان ومرجع المتطلب والخطوات والبيانات والمتوقع.",
+        "استخدم «تعديل» لتصحيح الحالة؛ الخطوات والشروط قوائم مستقلة قابلة للإضافة والحذف.",
+        "اعتمد الحالة التي راجعتها. الحالات غير المعتمدة أو المستبعدة لا تُشغّل كحالات معتمدة."
+      ],
+      "image": "ui-design-editor.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 886.1538461538462,
+          "y": 514.890625,
+          "tx": 713.3538461538462,
+          "ty": 512.6760416666666,
+          "label": "تعديل"
+        },
+        {
+          "number": 2,
+          "x": 886.1538461538462,
+          "y": 625.6197916666666,
+          "tx": 788.6769230769231,
+          "ty": 512.6760416666666,
+          "label": "اعتماد"
+        },
+        {
+          "number": 3,
+          "x": 775.3846153846155,
+          "y": 1218.0208333333333,
+          "tx": 988.0615384615385,
+          "ty": 1246.8104166666665,
+          "label": "إضافة خطوة"
+        }
+      ],
+      "sourceBasis": "Current source labels and historical specialist screenshot",
+      "coverage": "اللقطة السابقة تُظهر محررًا طويلًا؛ افتح الصورة بالحجم الأصلي لقراءة الحقول. الجزء السفلي غير المصوّر لا يُعد مغطى بصريًا.",
+      "nativeWidth": 1440,
+      "nativeHeight": 2126
+    },
+    {
+      "id": "preflight",
+      "section": "الأتمتة",
+      "title": "تحقق من الجاهزية قبل تفسير الفشل",
+      "instructions": [
+        "في «تجهيز البيئة» حدّد عنوان بيئة الاختبار والمشغّل.",
+        "احفظ البيئة ثم شغّل «فحص الجاهزية». راجع الاتصال والمصادقة وأدوات التنفيذ.",
+        "اسمح بالعمليات التي تعدّل البيانات فقط لبيئة اختبار مصرح بها. لا تنسخ رابط النسخة الخاصة أو أسرارها إلى تجربة عامة."
+      ],
+      "image": "ui-prepare.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 450,
+          "y": 230,
+          "tx": 550,
+          "ty": 316,
+          "label": "عنوان البيئة"
+        },
+        {
+          "number": 2,
+          "x": 650,
+          "y": 655,
+          "tx": 393,
+          "ty": 607,
+          "label": "حفظ البيئة"
+        },
+        {
+          "number": 3,
+          "x": 1100,
+          "y": 300,
+          "tx": 945,
+          "ty": 352,
+          "label": "فحص الجاهزية"
+        }
+      ],
+      "sourceBasis": "Current source labels and historical specialist screenshot",
+      "coverage": "مثال محفوظ لبيئة تدريب محلية، لا إعدادات إنتاج. لا يلزم رمز وصول إذا كانت خدمة التدريب لا تطلبه.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1030
+    },
+    {
+      "id": "execute",
+      "section": "الأتمتة",
+      "title": "شغّل المعتمد وتابع كل نتيجة",
+      "instructions": [
+        "في «التنفيذ» اختر C# أو Dart.",
+        "إذا احتوت الحالات على كتابة، راجع موافقة الكتابة الخاصة بهذا التشغيل.",
+        "اضغط «تشغيل الاختبارات المعتمدة» أو حدّد حالات بعينها. تابع التقدم؛ يمكن إلغاء التشغيل عند الحاجة.",
+        "افتح نتيجة الحالة واقرأ الدليل. التخطي ليس نجاحًا ولا فشلًا للمنتج."
+      ],
+      "image": "ui-execute.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 988.9534883720931,
+          "y": 219.79155238617665,
+          "tx": 1193.0232558139535,
+          "ty": 280.49588590235874,
+          "label": "المشغّل"
+        },
+        {
+          "number": 2,
+          "x": 962.7906976744187,
+          "y": 319.2210641799232,
+          "tx": 1084.186046511628,
+          "ty": 320.2676906198574,
+          "label": "موافقة الكتابة"
+        },
+        {
+          "number": 3,
+          "x": 1318.6046511627908,
+          "y": 418.6505759736698,
+          "tx": 1176.279069767442,
+          "ty": 361.0861217772902,
+          "label": "تشغيل المعتمد"
+        }
+      ],
+      "sourceBasis": "Current source labels and historical specialist screenshot",
+      "coverage": "لقطة فحص محلي قديم، لا نتيجة الهدف الخارجي. عند إعادة التشغيل راجع تاريخ السجل ونوعه حتى لا تختلط الملاحظة اليدوية بالتخطي.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1908
+    },
+    {
+      "id": "triage-export",
+      "section": "الأتمتة",
+      "title": "وثّق العيب وصدّر الأدلة",
+      "instructions": [
+        "في «النتائج والتقارير» اختر التشغيل ثم افتح نتيجة الحالة.",
+        "عند تأكيد عيب، افتح «تقييم الخلل» وسجّل الشدة والأولوية والحالة وخطوات إعادة الإنتاج.",
+        "نزّل HTML للقراءة، أو RTF القابل للتعديل، أو JSON للاستخدام التقني. راجع المحتوى قبل مشاركته."
+      ],
+      "image": "usability-review-ar-1440.png",
+      "annotations": [
+        {
+          "number": 1,
+          "x": 740,
+          "y": 480,
+          "tx": 460,
+          "ty": 616,
+          "label": "فتح النتيجة"
+        },
+        {
+          "number": 2,
+          "x": 220,
+          "y": 715,
+          "tx": 100,
+          "ty": 778,
+          "label": "تقييم الخلل"
+        },
+        {
+          "number": 3,
+          "x": 420,
+          "y": 340,
+          "tx": 290,
+          "ty": 433,
+          "label": "تنزيل تقرير HTML"
+        }
+      ],
+      "sourceBasis": "Current source labels and historical specialist screenshot",
+      "coverage": "الصورة سجل تجريبي سابق، ولا تعني أن عدد النتائج المعروض يخص مشروعك.",
+      "nativeWidth": 1440,
+      "nativeHeight": 1033
+    }
+  ]
+}

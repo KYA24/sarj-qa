@@ -1,0 +1,107 @@
+{
+  "passed": [
+    "Guide renders as Arabic RTL",
+    "Zoom dialog opens, Escape closes",
+    "Search filters actual guide index",
+    "RTL keyboard navigation works",
+    "All 16 illustrated steps decode with native-size assets",
+    "Annotation viewBox matches image dimensions",
+    "No horizontal overflow at 1440/390/320 on representative steps",
+    "Actual Arabic heading glyphs rendered with custom Brando font",
+    "Print exposes all 17 steps and hides reader chrome (no PDF capture)"
+  ],
+  "errors": [],
+  "assets": [
+    {
+      "src": "/guide/tester-empty-1440.png",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/guide/tester-checks-1440.png",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/guide/tester-checks-1440.png",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/guide/tester-checks-1440.png",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/guide/tester-checks-1440.png",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/guide/tester-first-attempt.png",
+      "width": 1440,
+      "height": 1642
+    },
+    {
+      "src": "/guide/tester-first-attempt.png",
+      "width": 1440,
+      "height": 1642
+    },
+    {
+      "src": "/guide/tester-final-results-1440.png",
+      "width": 1440,
+      "height": 1043
+    },
+    {
+      "src": "/guide/tester-final-results-1440.png",
+      "width": 1440,
+      "height": 1043
+    },
+    {
+      "src": "/guide/tester-final-results-1440.png",
+      "width": 1440,
+      "height": 1043
+    },
+    {
+      "src": "/guide/tester-final-results-1440.png",
+      "width": 1440,
+      "height": 1043
+    },
+    {
+      "src": "/guide/ui-understand-desktop.png",
+      "width": 1440,
+      "height": 1177
+    },
+    {
+      "src": "/guide/ui-design-editor.png",
+      "width": 1440,
+      "height": 2126
+    },
+    {
+      "src": "/guide/ui-prepare.png",
+      "width": 1440,
+      "height": 1030
+    },
+    {
+      "src": "/guide/ui-execute.png",
+      "width": 1440,
+      "height": 1908
+    },
+    {
+      "src": "/guide/usability-review-ar-1440.png",
+      "width": 1440,
+      "height": 1033
+    }
+  ],
+  "fonts": {
+    "fonts": [
+      {
+        "familyName": "Brando Arabic",
+        "postScriptName": "BrandoArabicSemiBold",
+        "isCustomFont": true,
+        "glyphCount": 22
+      }
+    ]
+  },
+  "scope": "Headless DOM interaction and image decoding only; no screenshot, video or PDF capture was performed. Final annotated pixels and printed PDF not captured/reviewed."
+}

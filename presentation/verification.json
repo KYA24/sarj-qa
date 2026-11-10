@@ -1,0 +1,164 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "reducedMotion": "no-preference",
+    "allTenSlides": true,
+    "backArrow": true,
+    "errors": [],
+    "externalRequests": [],
+    "actualFonts": [
+      {
+        "familyName": "Brando Arabic",
+        "postScriptName": "BrandoArabicSemiBold",
+        "isCustomFont": true,
+        "glyphCount": 33
+      }
+    ],
+    "layouts": [
+      {
+        "slide": 1,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 2,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 3,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 4,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 5,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 6,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 7,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 8,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 9,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 10,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "reducedMotion": "reduce",
+    "allTenSlides": true,
+    "backArrow": true,
+    "errors": [],
+    "externalRequests": [],
+    "actualFonts": [
+      {
+        "familyName": "Brando Arabic",
+        "postScriptName": "BrandoArabicSemiBold",
+        "isCustomFont": true,
+        "glyphCount": 33
+      }
+    ],
+    "layouts": [
+      {
+        "slide": 1,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 2,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 3,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 4,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 5,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 6,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 7,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 8,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 9,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      },
+      {
+        "slide": 10,
+        "overflow": [],
+        "fonts": true,
+        "images": true
+      }
+    ]
+  }
+]

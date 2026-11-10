@@ -1,0 +1,1062 @@
+{
+  "id": "assignment-nzl217-demo",
+  "name": "تجربة المهمة — Nuzul Release 14 / NZL-217",
+  "sources": [
+    {
+      "id": "task-brief",
+      "type": "text",
+      "name": "المطلوب وحدود المهمة",
+      "content": "مهمة تدريب: يجب ألا تُحفظ مغادرة تسبق الوصول. راجع API والحجز وصور الكونسول ونص الوكيل. لا نفترض رمز رفض محدد أو منع الحجز في الماضي أو اليوم نفسه. لوحة الموظفين متاحة كصور فقط وليست بيئة تشغيل حية. هذا المشروع نسخة تدريب مستقلة؛ لا يحتوي بيانات مساحة المالك. الملاحظات السابقة أدلة تاريخية مؤرخة10نوفمبر2026وليست تشغيلًا جديدًا. الAPIالمحلية نموذج متعمد العيب وليستAPIالتدريب الخارجية."
+    },
+    {
+      "id": "fixture-api",
+      "type": "openapi",
+      "name": "مواصفات النموذج المحلي فقط",
+      "content": "{\n  \"openapi\": \"3.0.3\",\n  \"info\": {\n    \"title\": \"Nuzul Booking — Local QA Demonstration Fixture\",\n    \"version\": \"1.0.0\",\n    \"description\": \"AUTHORITATIVE LOCAL FIXTURE CONTRACT ONLY. Not an actual Nuzul service or Staff Console. The deliberate defect accepts checkout before check-in. Requirements: checkout must be later than check-in (400 otherwise); guestName, checkIn, checkOut are mandatory; valid creation returns 201; nights equals checkout minus checkin; changes persist for this fixture process lifetime.\"\n  },\n  \"servers\": [\n    {\n      \"url\": \"http://127.0.0.1:5190\",\n      \"description\": \"Loopback demonstration only\"\n    }\n  ],\n  \"paths\": {\n    \"/health\": {\n      \"get\": {\n        \"operationId\": \"health\",\n        \"summary\": \"Fixture health\",\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Ready\"\n          }\n        }\n      }\n    },\n    \"/bookings\": {\n      \"get\": {\n        \"operationId\": \"listBookings\",\n        \"summary\": \"List persisted bookings\",\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Bookings\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"type\": \"array\",\n                  \"items\": {\n                    \"$ref\": \"#/components/schemas/Booking\"\n                  }\n                }\n              }\n            }\n          }\n        }\n      },\n      \"post\": {\n        \"operationId\": \"createBooking\",\n        \"summary\": \"Create booking\",\n        \"description\": \"Checkout MUST be strictly later than checkIn. Return HTTP 400 for invalid date ordering. Required booking fields: guestName, checkIn, checkOut. A valid request returns 201 and calculated nights.\",\n        \"requestBody\": {\n          \"required\": true,\n          \"content\": {\n            \"application/json\": {\n              \"schema\": {\n                \"$ref\": \"#/components/schemas/Booking\"\n              },\n              \"examples\": {\n                \"valid\": {\n                  \"value\": {\n                    \"guestName\": \"Demo Guest\",\n                    \"checkIn\": \"2030-01-10\",\n                    \"checkOut\": \"2030-01-13\"\n                  }\n                },\n                \"invalidDate\": {\n                  \"value\": {\n                    \"guestName\": \"Demo Guest\",\n                    \"checkIn\": \"2030-01-10\",\n                    \"checkOut\": \"2030-01-09\"\n                  }\n                }\n              }\n            }\n          }\n        },\n        \"responses\": {\n          \"201\": {\n            \"description\": \"Created\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Booking\"\n                }\n              }\n            }\n          },\n          \"400\": {\n            \"description\": \"Invalid or missing booking fields; checkout not after check-in\"\n          }\n        },\n        \"x-test-cases\": [\n          {\n            \"id\": \"fixture-valid-booking\",\n            \"title\": \"Valid booking creation\",\n            \"method\": \"POST\",\n            \"path\": \"/bookings\",\n            \"body\": {\n              \"guestName\": \"Demo Guest\",\n              \"checkIn\": \"2030-01-10\",\n              \"checkOut\": \"2030-01-13\"\n            },\n            \"expectedStatus\": 201,\n            \"expectedResult\": \"HTTP 201 with nights equal to 3\",\n            \"assertions\": [\n              {\n                \"kind\": \"jsonEquals\",\n                \"path\": \"nights\",\n                \"expected\": \"3\"\n              }\n            ]\n          },\n          {\n            \"id\": \"fixture-invalid-checkout\",\n            \"title\": \"Reject checkout preceding check-in\",\n            \"method\": \"POST\",\n            \"path\": \"/bookings\",\n            \"body\": {\n              \"guestName\": \"Demo Guest\",\n              \"checkIn\": \"2030-01-10\",\n              \"checkOut\": \"2030-01-09\"\n            },\n            \"expectedStatus\": 400,\n            \"expectedResult\": \"HTTP 400: checkout must be later than check-in\",\n            \"assertions\": [\n              {\n                \"kind\": \"status\",\n                \"path\": \"\",\n                \"expected\": \"400\"\n              }\n            ]\n          }\n        ]\n      }\n    },\n    \"/bookings/{id}\": {\n      \"parameters\": [\n        {\n          \"name\": \"id\",\n          \"in\": \"path\",\n          \"required\": true,\n          \"schema\": {\n            \"type\": \"string\"\n          },\n          \"example\": \"1\"\n        }\n      ],\n      \"get\": {\n        \"operationId\": \"getBooking\",\n        \"summary\": \"Retrieve booking\",\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Persisted booking\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Booking\"\n                }\n              }\n            }\n          },\n          \"404\": {\n            \"description\": \"Not found\"\n          }\n        }\n      },\n      \"put\": {\n        \"operationId\": \"updateBooking\",\n        \"summary\": \"Update and persist booking\",\n        \"requestBody\": {\n          \"required\": true,\n          \"content\": {\n            \"application/json\": {\n              \"schema\": {\n                \"$ref\": \"#/components/schemas/Booking\"\n              },\n              \"example\": {\n                \"guestName\": \"Demo Guest\",\n                \"checkIn\": \"2030-01-10\",\n                \"checkOut\": \"2030-01-13\"\n              }\n            }\n          }\n        },\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Updated\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Booking\"\n                }\n              }\n            }\n          },\n          \"400\": {\n            \"description\": \"Invalid booking\"\n          },\n          \"404\": {\n            \"description\": \"Not found\"\n          }\n        }\n      },\n      \"patch\": {\n        \"operationId\": \"patchBooking\",\n        \"summary\": \"Partially update booking\",\n        \"requestBody\": {\n          \"required\": true,\n          \"content\": {\n            \"application/json\": {\n              \"schema\": {\n                \"$ref\": \"#/components/schemas/Booking\"\n              },\n              \"example\": {\n                \"guestName\": \"Demo Guest\",\n                \"checkIn\": \"2030-01-10\",\n                \"checkOut\": \"2030-01-13\"\n              }\n            }\n          }\n        },\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Updated\"\n          },\n          \"400\": {\n            \"description\": \"Invalid booking\"\n          },\n          \"404\": {\n            \"description\": \"Not found\"\n          }\n        }\n      }\n    },\n    \"/protected\": {\n      \"get\": {\n        \"operationId\": \"authenticationCheck\",\n        \"summary\": \"Requires documented Bearer credential\",\n        \"security\": [\n          {\n            \"bearerAuth\": []\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Authorized\"\n          },\n          \"401\": {\n            \"description\": \"Missing or invalid Bearer token\"\n          }\n        }\n      }\n    }\n  },\n  \"components\": {\n    \"schemas\": {\n      \"Booking\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"guestName\",\n          \"checkIn\",\n          \"checkOut\"\n        ],\n        \"properties\": {\n          \"id\": {\n            \"type\": \"string\",\n            \"readOnly\": true\n          },\n          \"guestName\": {\n            \"type\": \"string\",\n            \"minLength\": 1\n          },\n          \"checkIn\": {\n            \"type\": \"string\",\n            \"format\": \"date\",\n            \"description\": \"ISO 8601 check-in calendar date.\"\n          },\n          \"checkOut\": {\n            \"type\": \"string\",\n            \"format\": \"date\",\n            \"description\": \"Checkout MUST be strictly later than checkIn; otherwise return HTTP 400.\"\n          },\n          \"nights\": {\n            \"type\": \"integer\",\n            \"readOnly\": true,\n            \"description\": \"Number of calendar nights: checkOut minus checkIn.\"\n          }\n        }\n      }\n    },\n    \"securitySchemes\": {\n      \"bearerAuth\": {\n        \"type\": \"http\",\n        \"scheme\": \"bearer\",\n        \"description\": \"LOCAL FIXTURE ONLY token: fixture-token\"\n      }\n    }\n  },\n  \"x-test-cases\": [\n    {\n      \"id\": \"fixture-valid-booking\",\n      \"title\": \"Valid booking creation\",\n      \"method\": \"POST\",\n      \"path\": \"/bookings\",\n      \"body\": \"{\\\"guestName\\\":\\\"Demo Guest\\\",\\\"checkIn\\\":\\\"2030-01-10\\\",\\\"checkOut\\\":\\\"2030-01-13\\\"}\",\n      \"expectedStatus\": 201,\n      \"expectedResult\": \"HTTP 201 with nights equal to 3\",\n      \"assertions\": [\n        {\n          \"kind\": \"jsonEquals\",\n          \"path\": \"nights\",\n          \"expected\": \"3\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fixture-invalid-checkout\",\n      \"title\": \"Reject checkout preceding check-in\",\n      \"method\": \"POST\",\n      \"path\": \"/bookings\",\n      \"body\": \"{\\\"guestName\\\":\\\"Demo Guest\\\",\\\"checkIn\\\":\\\"2030-01-10\\\",\\\"checkOut\\\":\\\"2030-01-09\\\"}\",\n      \"expectedStatus\": 400,\n      \"expectedResult\": \"HTTP 400: checkout must be later than check-in\",\n      \"assertions\": [\n        {\n          \"kind\": \"status\",\n          \"path\": \"\",\n          \"expected\": \"400\"\n        }\n      ]\n    }\n  ]\n}\n"
+    },
+    {
+      "id": "call-transcript",
+      "type": "text",
+      "name": "نص المكالمة وتعليمات التقييم",
+      "content": "تعليمات الوكيل: نجدية طوال المكالمة؛ لا اسم لم يذكره المتصل؛ قبل الحفظ اقرأ التاريخين واحصل على نعم صريحة؛ بعد تعديل أي تفصيل أعد التأكيد الكامل؛ لا سعر قبل تأكيد الغرفة والليالي؛ لا خصم خارج المعرفة واعرض التحويل؛ لا إنهاء دون المرجع. التفريغ: 1أهلين وسهلين بنزل معك نورة،كيفأساعدك؟2أبغى أحجز شقة بالرياض.3متىتبي تجي؟4خمستعشرأغسطس.5الإجمالي250ريال.6أطلع يوم12.7سوف أقوم بتسجيل الحجز الآن.8تم الحجز باسمك أستاذ فهد.9الشقة كم غرفة؟10في خدمة ثانية؟11قلتلك كم غرفة؟12غرفتينوصالة.13في خصم للحجزالطويل؟14ما أقدر أعتمد خصم غير الموجود عندنا؛تبي أحولك لموظف؟15غيّر الخروج يوم20.16تم التعديل.17والسعر نفسه؟18إيه250.19شكرًا.20شكرًا لاتصالك مع السلامة. هذه مراجعة نصلااختبارصوتحي."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "task-requirement-1",
+      "sourceId": "task-brief",
+      "reference": "NZL-217 / provided exercise",
+      "text": "عدم وجود حجز مؤكد بمدةسالبة.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-2",
+      "sourceId": "task-brief",
+      "reference": "NZL-217 / provided exercise",
+      "text": "منع حفظ التواريخ المعكوسة من الواجهة الحية.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-3",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "قراءة التاريخين وتأكيدهما قبل الحفظ وإعادةالتأكيدبعدالتعديل.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-4",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "لا سعر قبل تأكيد الغرفة والليالي.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-5",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "لا اسم لم يقدمه المتصل.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-6",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "الالتزام باللهجة المطلوبة.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-7",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "قراءة مرجعالحجز قبلإنهاءالمكالمة.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-8",
+      "sourceId": "call-transcript",
+      "reference": "NZL-217 / provided exercise",
+      "text": "لا خصم غيرمعتمد وعرضالتحويل.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-9",
+      "sourceId": "task-brief",
+      "reference": "NZL-217 / provided exercise",
+      "text": "حفظ الحجز الصحيح كما أُرسل.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-10",
+      "sourceId": "task-brief",
+      "reference": "NZL-217 / provided exercise",
+      "text": "رفض المغادرة قبل الوصول قبلالتخزين.",
+      "status": "Verified"
+    },
+    {
+      "id": "task-requirement-11",
+      "sourceId": "task-brief",
+      "reference": "NZL-217 / provided exercise",
+      "text": "قراءة مستقلة لا تظهر حجزًا بمدةسالبة.",
+      "status": "Verified"
+    },
+    {
+      "id": "local-requirement-12",
+      "sourceId": "fixture-api",
+      "reference": "bundled fixture contract",
+      "text": "المتوقع حسب عقد النموذج المحلي HTTP201",
+      "status": "Verified"
+    },
+    {
+      "id": "local-requirement-13",
+      "sourceId": "fixture-api",
+      "reference": "bundled fixture contract",
+      "text": "المتوقع حسب عقد النموذج المحلي HTTP400",
+      "status": "Verified"
+    }
+  ],
+  "testCases": [
+    {
+      "id": "task-check-1",
+      "title": "الكونسول — منع تأكيد مغادرة قبل الوصول",
+      "requirementId": "task-requirement-1",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "عدم وجود حجز مؤكد بمدةسالبة.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-2",
+      "title": "الكونسول — التحقق من رفض الحفظ فعليًا",
+      "requirementId": "task-requirement-2",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "منع حفظ التواريخ المعكوسة من الواجهة الحية.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-3",
+      "title": "الوكيل — تأكيد التواريخ قبل الحفظ وبعد التعديل",
+      "requirementId": "task-requirement-3",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "قراءة التاريخين وتأكيدهما قبل الحفظ وإعادةالتأكيدبعدالتعديل.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-4",
+      "title": "الوكيل — عدم إعلان السعر قبل تأكيد نوع الغرفة والليالي",
+      "requirementId": "task-requirement-4",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "لا سعر قبل تأكيد الغرفة والليالي.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-5",
+      "title": "الوكيل — عدم اختلاق اسم العميل",
+      "requirementId": "task-requirement-5",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "لا اسم لم يقدمه المتصل.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-6",
+      "title": "الوكيل — الالتزام باللهجة النجدية طوال المكالمة",
+      "requirementId": "task-requirement-6",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "الالتزام باللهجة المطلوبة.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-7",
+      "title": "الوكيل — قراءة مرجع الحجز قبل إنهاء المكالمة",
+      "requirementId": "task-requirement-7",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "قراءة مرجعالحجز قبلإنهاءالمكالمة.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-8",
+      "title": "الوكيل — الالتزام بحدود الخصومات وعرض التحويل",
+      "requirementId": "task-requirement-8",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "لا خصم غيرمعتمد وعرضالتحويل.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-9",
+      "title": "API — إنشاء حجز صحيح مع حفظ التواريخ",
+      "requirementId": "task-requirement-9",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "حفظ الحجز الصحيح كما أُرسل.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-10",
+      "title": "API — رفض مغادرة تسبق الوصول",
+      "requirementId": "task-requirement-10",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "رفض المغادرة قبل الوصول قبلالتخزين.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "task-check-11",
+      "title": "API — التحقق من الحجز المحفوظ بقراءة مستقلة",
+      "requirementId": "task-requirement-11",
+      "steps": [
+        "راجع المرجع المرفق والنتيجة التاريخية.",
+        "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+      ],
+      "expectedResult": "قراءة مستقلة لا تظهر حجزًا بمدةسالبة.",
+      "priority": "High",
+      "testType": "User journey",
+      "executionMode": "Manual",
+      "language": "csharp",
+      "verificationStatus": "Historical review / verify in your own environment",
+      "approved": false,
+      "excluded": false,
+      "method": "",
+      "path": "",
+      "body": "",
+      "preconditions": [],
+      "inputData": "",
+      "assertions": []
+    },
+    {
+      "id": "local-check-12",
+      "title": "النموذج المحلي — حجز صحيح",
+      "requirementId": "local-requirement-12",
+      "steps": [
+        "راجع الطلب والتوقع.",
+        "اعتمد الحالة ثمفعّل إذن التعديل لكلتشغيل وشغّل."
+      ],
+      "expectedResult": "المتوقع حسب عقد النموذج المحلي HTTP201",
+      "priority": "High",
+      "testType": "API",
+      "executionMode": "Automated",
+      "language": "csharp",
+      "verificationStatus": "Verified — local fixture contract only",
+      "approved": false,
+      "excluded": false,
+      "method": "POST",
+      "path": "/bookings",
+      "body": "{\"guestName\": \"Training Guest\", \"checkIn\": \"2026-12-10\", \"checkOut\": \"2026-12-12\"}",
+      "expectedStatus": 201,
+      "preconditions": [],
+      "inputData": "Synthetic fixture data",
+      "assertions": [
+        {
+          "kind": "status",
+          "path": "",
+          "expected": "201"
+        }
+      ]
+    },
+    {
+      "id": "local-check-13",
+      "title": "النموذج المحلي — رفض تواريخ معكوسة",
+      "requirementId": "local-requirement-13",
+      "steps": [
+        "راجع الطلب والتوقع.",
+        "اعتمد الحالة ثمفعّل إذن التعديل لكلتشغيل وشغّل."
+      ],
+      "expectedResult": "المتوقع حسب عقد النموذج المحلي HTTP400",
+      "priority": "High",
+      "testType": "API",
+      "executionMode": "Automated",
+      "language": "csharp",
+      "verificationStatus": "Verified — local fixture contract only",
+      "approved": false,
+      "excluded": false,
+      "method": "POST",
+      "path": "/bookings",
+      "body": "{\"guestName\": \"Training Guest\", \"checkIn\": \"2026-12-10\", \"checkOut\": \"2026-12-09\"}",
+      "expectedStatus": 400,
+      "preconditions": [],
+      "inputData": "Synthetic fixture data",
+      "assertions": [
+        {
+          "kind": "status",
+          "path": "",
+          "expected": "400"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "id": "historical-task-check-1",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-1",
+          "title": "الكونسول — منع تأكيد مغادرة قبل الوصول",
+          "requirementId": "task-requirement-1",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "عدم وجود حجز مؤكد بمدةسالبة.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-1",
+          "sourceId": "task-brief",
+          "reference": "NZL-217 / provided exercise",
+          "text": "عدم وجود حجز مؤكد بمدةسالبة.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-1",
+          "outcome": "Failed",
+          "expectedResult": "عدم وجود حجز مؤكد بمدةسالبة.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. مراجعة دليل ثابت فقط — لا توجد شاشة حية منشورة. الصورتان تعرضان BK-1043 بوصول2026-08-15 ومغادرة12/08/2026 و-3ليالٍ مع حالة Confirmed. تقرير العيب: NZL-217-UI-01، إصدار14، شدةHigh لتأثيره على صحة حجوزات الوصول وتشغيل الاستقبال. خطوات الإعادة: افتح صور القائمة ثم تفاصيل BK-1043 وقارن التواريخ والليالي والحالة. المتوقع ألا يُؤكد حجز بمدّة سالبة؛ الفعلي يؤكد الحجز غير المنطقي. لا تثبت الصور أن زر الحفظ يقبل ذلك حاليًا، ولا تثبت أي طبقة أنشأت الخلل.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-1",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-2",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-2",
+          "title": "الكونسول — التحقق من رفض الحفظ فعليًا",
+          "requirementId": "task-requirement-2",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "منع حفظ التواريخ المعكوسة من الواجهة الحية.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-2",
+          "sourceId": "task-brief",
+          "reference": "NZL-217 / provided exercise",
+          "text": "منع حفظ التواريخ المعكوسة من الواجهة الحية.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-2",
+          "outcome": "Blocked",
+          "expectedResult": "منع حفظ التواريخ المعكوسة من الواجهة الحية.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. الملف يصرح أن كونسول الموظفين غير منشور، والمتاح صورتان ثابتتان. لا يمكن تنفيذ تغيير تاريخ ثم الضغط على الحفظ أو قياس تجاوب الشاشة من الصور. بقي فحص سلوك الحفظ الفعلي متعذرًا، وليس عيبًا مؤكدًا في زر الحفظ.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-2",
+          "reviewed": true,
+          "reviewedOutcome": "Blocked",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-3",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-3",
+          "title": "الوكيل — تأكيد التواريخ قبل الحفظ وبعد التعديل",
+          "requirementId": "task-requirement-3",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "قراءة التاريخين وتأكيدهما قبل الحفظ وإعادةالتأكيدبعدالتعديل.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-3",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "قراءة التاريخين وتأكيدهما قبل الحفظ وإعادةالتأكيدبعدالتعديل.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-3",
+          "outcome": "Failed",
+          "expectedResult": "قراءة التاريخين وتأكيدهما قبل الحفظ وإعادةالتأكيدبعدالتعديل.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. مراجعة نص المكالمة فقط: المتصل قال15أغسطس ثم الخروج12، والوكيل أعلن الحفظ في7–8 دون قراءة التاريخين أو نعم صريحة. وبعد تغيير الخروج إلى20 في15، قال تم التعديل في16 دون إعادة تأكيد كامل الحجز. مخالفتان مؤكدتان للتعليمات؛ لا نجزم من النص وحده بسبب التخزين الداخلي.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-3",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-4",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-4",
+          "title": "الوكيل — عدم إعلان السعر قبل تأكيد نوع الغرفة والليالي",
+          "requirementId": "task-requirement-4",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "لا سعر قبل تأكيد الغرفة والليالي.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-4",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "لا سعر قبل تأكيد الغرفة والليالي.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-4",
+          "outcome": "Failed",
+          "expectedResult": "لا سعر قبل تأكيد الغرفة والليالي.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. في السطر5 أعلن250ريالًا قبل أن يذكر المتصل تاريخ الخروج أصلًا في6، ونوع الشقة لم يُذكر حتى12 بعد سؤال مكرر. وفي18 أبقى السعر نفسه بعد تعديل المدة دون إعادة تأكيدها. خرق ترتيب التأكيد واضح؛ صحة مبلغ250نفسه لا يمكن الحكم عليها دون مرجع الأسعار.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-4",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-5",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-5",
+          "title": "الوكيل — عدم اختلاق اسم العميل",
+          "requirementId": "task-requirement-5",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "لا اسم لم يقدمه المتصل.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-5",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "لا اسم لم يقدمه المتصل.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-5",
+          "outcome": "Failed",
+          "expectedResult": "لا اسم لم يقدمه المتصل.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. الوكيل قال في8: «تم الحجز باسمك أستاذ فهد»، بينما لم يذكر المتصل اسمه في أي سطر. هذه مخالفة مباشرة لقيد الاسم، حتى لو ظهر اسم في صورة الحجز؛ التعليمات تشترط أن يعطيه المتصل في المكالمة.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-5",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-6",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-6",
+          "title": "الوكيل — الالتزام باللهجة النجدية طوال المكالمة",
+          "requirementId": "task-requirement-6",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "الالتزام باللهجة المطلوبة.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-6",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "الالتزام باللهجة المطلوبة.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-6",
+          "outcome": "Failed",
+          "expectedResult": "الالتزام باللهجة المطلوبة.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. السطر7: «سوف أقوم بتسجيل الحجز الآن» صياغة فصحى واضحة وليست نجدية طبيعية. البداية في1–3 قريبة من اللهجة المطلوبة، لكنها لا تلغي المخالفة اللاحقة. التقييم هنا للنص، لا لجودة صوت أو نطق لم نستمع إليه.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-6",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-7",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-7",
+          "title": "الوكيل — قراءة مرجع الحجز قبل إنهاء المكالمة",
+          "requirementId": "task-requirement-7",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "قراءة مرجعالحجز قبلإنهاءالمكالمة.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-7",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "قراءة مرجعالحجز قبلإنهاءالمكالمة.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-7",
+          "outcome": "Failed",
+          "expectedResult": "قراءة مرجعالحجز قبلإنهاءالمكالمة.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. انتهت المكالمة في20 دون ذكر أي مرجع حجز في جميع الأسطر. BK-1043 موجود في عنوان المهمة والصور، لكنه لم يُقرأ للمتصل في النص. النتيجة مخالفة مؤكدة لشرط إنهاء المكالمة.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-7",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-8",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-8",
+          "title": "الوكيل — الالتزام بحدود الخصومات وعرض التحويل",
+          "requirementId": "task-requirement-8",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "لا خصم غيرمعتمد وعرضالتحويل.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-8",
+          "sourceId": "call-transcript",
+          "reference": "NZL-217 / provided exercise",
+          "text": "لا خصم غيرمعتمد وعرضالتحويل.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-8",
+          "outcome": "Passed",
+          "expectedResult": "لا خصم غيرمعتمد وعرضالتحويل.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. في14 رفض اعتماد خصم غير الموجود وعرض التحويل إلى موظف، وهو السلوك المطلوب في هذا الفرع. لا نثبت أن قاعدة المعرفة تحوي أو لا تحوي خصمًا معينًا لأنها غير مرفقة؛ النجاح يخص عدم اختراع خصم وعرض التحويل فقط.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-8",
+          "reviewed": true,
+          "reviewedOutcome": "Passed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-9",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "https://restful-booker.herokuapp.com",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-9",
+          "title": "API — إنشاء حجز صحيح مع حفظ التواريخ",
+          "requirementId": "task-requirement-9",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "حفظ الحجز الصحيح كما أُرسل.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-9",
+          "sourceId": "task-brief",
+          "reference": "NZL-217 / provided exercise",
+          "text": "حفظ الحجز الصحيح كما أُرسل.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-9",
+          "outcome": "Passed",
+          "expectedResult": "حفظ الحجز الصحيح كما أُرسل.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. تحقق API يدوي مستقل عن محرك سرج، 2026-11-10T18:59:44Z: POST /booking بترويساتContent-Type وAccept بقيمةapplication/json أعاد200 ومعرف4612، وصول2026-12-10 وخروج2026-12-12، ثمGET /booking/4612 أعاد200 ونفس البيانات والاسم الوهميRelease14AcceptTrial. نتيجة محرك سرج السابقة418 محفوظة ولا نعتمدها نجاحًا؛ غيابAccept عيب في الأداة. الدليلdocs/NZL217-LIVE-TRIAL-20261110.md.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-9",
+          "reviewed": true,
+          "reviewedOutcome": "Passed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-10",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "https://restful-booker.herokuapp.com",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-10",
+          "title": "API — رفض مغادرة تسبق الوصول",
+          "requirementId": "task-requirement-10",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "رفض المغادرة قبل الوصول قبلالتخزين.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-10",
+          "sourceId": "task-brief",
+          "reference": "NZL-217 / provided exercise",
+          "text": "رفض المغادرة قبل الوصول قبلالتخزين.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-10",
+          "outcome": "Failed",
+          "expectedResult": "رفض المغادرة قبل الوصول قبلالتخزين.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. NZL-217-API-01 — شدةHigh: API الخارجية تحفظ حجزًا بمغادرة قبل الوصول. تحقق مستقل يدوي بالترويسات الموثقةContent-Type وAccept: application/json: POST /booking بوصول2026-12-15 وخروج2026-12-12 أعادHTTP200 ومعرف4618؛ GET /booking/4618 فورًا أعاد200 ونفس التاريخين واسمInvalidDatesAcceptTrial (مدة−3ليالٍ). المتوقع رفض الإنشاء قبل الحفظ؛ رمز400غير محدد بالعقد. سبق أن أخفى418من محرك سرج الحفظ الفعلي للحجز4149. الدليلdocs/NZL217-LIVE-TRIAL-20261110.md. لا نخلط API التدريبية مع سبب خلل الصور الداخلية.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-10",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    },
+    {
+      "id": "historical-task-check-11",
+      "projectId": "assignment-nzl217-demo",
+      "status": "Completed",
+      "language": "human",
+      "startedAt": "2026-11-10T18:59:44Z",
+      "targetSnapshot": "https://restful-booker.herokuapp.com",
+      "testCasesSnapshot": [
+        {
+          "id": "task-check-11",
+          "title": "API — التحقق من الحجز المحفوظ بقراءة مستقلة",
+          "requirementId": "task-requirement-11",
+          "steps": [
+            "راجع المرجع المرفق والنتيجة التاريخية.",
+            "جرّب الحالة في بيئتك ثم سجّل مشاهدة مستقلة."
+          ],
+          "expectedResult": "قراءة مستقلة لا تظهر حجزًا بمدةسالبة.",
+          "priority": "High",
+          "testType": "User journey",
+          "executionMode": "Manual",
+          "language": "csharp",
+          "verificationStatus": "Historical review / verify in your own environment",
+          "approved": false,
+          "excluded": false,
+          "method": "",
+          "path": "",
+          "body": "",
+          "preconditions": [],
+          "inputData": "",
+          "assertions": []
+        }
+      ],
+      "requirementsSnapshot": [
+        {
+          "id": "task-requirement-11",
+          "sourceId": "task-brief",
+          "reference": "NZL-217 / provided exercise",
+          "text": "قراءة مستقلة لا تظهر حجزًا بمدةسالبة.",
+          "status": "Verified"
+        }
+      ],
+      "results": [
+        {
+          "testCaseId": "task-check-11",
+          "outcome": "Failed",
+          "expectedResult": "قراءة مستقلة لا تظهر حجزًا بمدةسالبة.",
+          "actualResult": "دليل تاريخي مستورد من تجربة10نوفمبر2026؛ ليس تنفيذًا على هذاالجهاز. تحقق مستقل حي من API بتاريخ 10 نوفمبر2026: الطلب المطابق للتوثيق بترويسة Accept: application/json أنشأ الحجز4618 وأعادHTTP200، وصول2026-12-15 ومغادرة2026-12-12 (−3ليالٍ). GET /booking/4618 مباشرة أعادHTTP200 والتاريخين والاسم الوهمي InvalidDatesAcceptTrial كما أُرسلت؛ ثبت الحفظ الفعلي للحجز غير المنطقي. الحجز الصحيح4612 أُنشئ وقُرئ200 بتواريخ10–12ديسمبر. تنفيذ يدوي مستقل عبر متصفح التوثيق، وليس نجاحًا لمحرك سرج. التشغيل الآلي الأصلي أعاد418 لغيابAccept لكنه حفظ أيضًا الحجزين4132 و4149؛ قُرئا فورًا200. الدليل المحلي docs/NZL217-LIVE-TRIAL-20261110.md. العيبNZL-217-API-01 شدةHigh: رفض مغادرة قبل الوصول قبل الكتابة في جميع قنوات الإنشاء والتعديل.",
+          "assertionOutcome": "Human observation; not an automated deterministic assertion",
+          "durationMs": 0,
+          "timestamp": "2026-11-10T18:59:44Z",
+          "evidenceReference": "historical-task-check-11",
+          "reviewed": true,
+          "reviewedOutcome": "Failed",
+          "observations": "Historical exercise evidence. Re-run independently."
+        }
+      ]
+    }
+  ],
+  "defects": []
+}

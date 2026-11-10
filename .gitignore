@@ -1,0 +1,17 @@
+node_modules/
+bin/
+obj/
+dist/
+.data/
+.demo-*/
+.runtime/
+.tools/
+.wrangler/
+evidence/
+reports/
+.env*
+*.log
+*.db*
+*.tsbuildinfo
+
+.demo-config.env

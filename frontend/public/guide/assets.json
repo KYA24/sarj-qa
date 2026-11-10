@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "file": "tester-empty-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "sha256": "8ef3279c3c164343ad35c758de94ee51f7dc33fd9021ee312a99dd0993cafd9e",
+      "original": "evidence/tester-empty-1440.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "tester-checks-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "sha256": "5443e38374cb3041f3e0a241311a4531a79aca9582bca22c91dfc1c6b6d0ef5a",
+      "original": "evidence/tester-checks-1440.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "tester-first-attempt.png",
+      "width": 1440,
+      "height": 1642,
+      "sha256": "adfcce8789eca00caf34b7759076be2565cadb365d295380ce626df7e9563da7",
+      "original": "evidence/tester-first-attempt.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "tester-final-results-1440.png",
+      "width": 1440,
+      "height": 1043,
+      "sha256": "fbc41eb11a7c2bc1ebe75de744e6387ec7ac4f56edfa271d20296787e0b13786",
+      "original": "evidence/tester-final-results-1440.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "ui-understand-desktop.png",
+      "width": 1440,
+      "height": 1177,
+      "sha256": "547ec4c5cccd7305f839aeab51d03c9a96daa75e6b5adbf95f814a09c623fdd1",
+      "original": "evidence/ui-understand-desktop.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "ui-design-editor.png",
+      "width": 1440,
+      "height": 2126,
+      "sha256": "2676680aa8af8c8522de743a821911becb6e85265a4b1c90f2eb16fa92f39824",
+      "original": "evidence/ui-design-editor.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "ui-prepare.png",
+      "width": 1440,
+      "height": 1030,
+      "sha256": "0833530c32e56bc1e09727a9e3a598f1b21e8af5367d64fb30c1b84e0368cafd",
+      "original": "evidence/ui-prepare.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "ui-execute.png",
+      "width": 1440,
+      "height": 1908,
+      "sha256": "e361ce42d15140f753e55243d07dc67a855f769b9b0748c637aba3544f0e832f",
+      "original": "evidence/ui-execute.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "usability-review-ar-1440.png",
+      "width": 1440,
+      "height": 1033,
+      "sha256": "892109707fde67289a1595c4ca5b52894591ca4473c308e90c6b873537b0a941",
+      "original": "evidence/usability-review-ar-1440.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    },
+    {
+      "file": "tester-checks-320.png",
+      "width": 320,
+      "height": 1383,
+      "sha256": "caacfe10bbf101aa13d74a3ea852513ea0dd784b441be12811ed6e752ea175f9",
+      "original": "evidence/tester-checks-320.png",
+      "privacy": "Reviewed existing image: synthetic test project only; no account email, credential or owner task attachment visible.",
+      "capture": "Pre-existing 2026-11-10 evidence; no new capture; exact capture metadata unavailable."
+    }
+  ],
+  "noNewCaptures": true
+}

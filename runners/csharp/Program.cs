@@ -1,0 +1,3 @@
+using System.Text.Json;
+using Nuzul;
+var options = new JsonSerializerOptions(JsonSerializerDefaults.Web); var text = await Console.In.ReadToEndAsync(); if (text.Length > 2_000_000) throw new InvalidOperationException("Input too large"); var input = JsonSerializer.Deserialize<RunnerInput>(text, options) ?? throw new InvalidOperationException("Missing input"); using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(10)); var records = new List<ExecutionRecord>(); foreach (var test in input.Tests) records.Add(await Engine.Execute(input, test, cts.Token)); Console.Write(JsonSerializer.Serialize(SafeHttp.Redact(records,input.AuthToken),options));

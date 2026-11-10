@@ -1,0 +1,3 @@
+# Preserve vendored upstream JavaScript formatting.
+**/gsap.min.js -whitespace
+**/hyperframes-*.js -whitespace

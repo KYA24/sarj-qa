@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "errorCount": 0,
+  "warningCount": 3,
+  "infoCount": 0,
+  "findings": [
+    {
+      "code": "css_transition_used",
+      "severity": "warning",
+      "message": "CSS declaration `transition: opacity .42s ease,transform .42s ease` runs on the browser clock and cannot be seeked deterministically across render workers.",
+      "fixHint": "Keep the class or attribute swap for state; put the visual change on the paused GSAP timeline.",
+      "selector": "[data-reveal]",
+      "snippet": "transition:opacity .42s ease,transform .42s ease",
+      "file": "./presentation/composition/index.html"
+    },
+    {
+      "code": "css_transition_used",
+      "severity": "warning",
+      "message": "CSS declaration `transition: opacity .32s ease` runs on the browser clock and cannot be seeked deterministically across render workers.",
+      "fixHint": "Keep the class or attribute swap for state; put the visual change on the paused GSAP timeline.",
+      "selector": ".slide .fade-in",
+      "snippet": "transition:opacity .32s ease",
+      "file": "./presentation/composition/index.html"
+    },
+    {
+      "code": "css_transition_used",
+      "severity": "warning",
+      "message": "CSS declaration `transition: opacity .28s ease` runs on the browser clock and cannot be seeked deterministically across render workers.",
+      "fixHint": "Keep the class or attribute swap for state; put the visual change on the paused GSAP timeline.",
+      "selector": ".slide",
+      "snippet": "transition:opacity .28s ease",
+      "file": "./presentation/composition/index.html"
+    }
+  ],
+  "filesScanned": 1,
+  "_meta": {
+    "version": "0.9.20",
+    "latestVersion": "0.9.30",
+    "updateAvailable": true,
+    "checkedAt": "2026-11-10T19:26:37.925Z",
+    "skillsOutdated": 0,
+    "skillsMissing": 0
+  }
+}
