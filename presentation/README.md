@@ -1,6 +1,6 @@
 # Interactive QA tool presentation
 
-Public deck: https://sarj-qa-presentation.pages.dev/
+Public deck: https://kya24.github.io/sarj-qa/
 
 11 Arabic slides, including four product-experience pages. Current screenshots use synthetic local booking data. Valid booking passes; reversed dates fail against an intentionally faulty local fixture. The time-saving example is hypothetical, not measured.
 

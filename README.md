@@ -5,7 +5,7 @@ A runnable QA workspace: **expectations → checks → evidence**. Arabic/Englis
 ## Review links
 
 - **Public source:** https://github.com/KYA24/sarj-qa
-- **Presentation:** https://sarj-qa-presentation.pages.dev/ — product walkthrough, scope, approach and limitations; no sign-in required.
+- **Presentation:** https://kya24.github.io/sarj-qa/ — product walkthrough, scope, approach and limitations; no sign-in required.
 
 ## Why this tool and scope
 
